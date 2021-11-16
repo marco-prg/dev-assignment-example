@@ -1,5 +1,5 @@
 import sys
-sys.path.append('./lib')
+sys.path.append('../lib')
 
 from flask import Flask, make_response, request, session
 from flask_cors import CORS
@@ -13,7 +13,7 @@ CORS(app)
 def main_entry_point():
   try:
 
-    data_df = yf.download(  # or pdr.get_data_yahoo(...
+    data_df = yf.download(
         # tickers list or string as well
         tickers = "CORN UGA NDAQ",
 
@@ -48,17 +48,15 @@ def main_entry_point():
         proxy = None
     )
 
-    print(data_df.index)
-
     # remove unused columns
     remove_columns = [column for column in data_df.columns if column[1] != 'Close']    
     data_df = data_df.drop(remove_columns, axis=1)
 
     data_df.columns = ["_".join(column) for column in data_df.columns]
-    #return make_response({"data": data_df.to_json()}, 200)
+    # return make_response({"data": data_df.to_json()}, 200)
     return data_df.to_html()
 
-  except Exception as e:
+  except Exception:
     traceback.print_exc()
     return make_response({"error": "Internal server error"}, 500)
 
