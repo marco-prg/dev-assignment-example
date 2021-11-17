@@ -3,6 +3,7 @@
     <v-sheet class="stackSheet" color="white">
       <div id="chart">
         <apexchart
+          class="pa-4"
           type="area"
           height="350"
           :options="chartOptions"
@@ -11,8 +12,9 @@
       </div>
     </v-sheet>
 
-    <v-container fluid class="d-flex flex-row">
+    <v-container fluid class="d-flex flex-row pa-4">
       <v-radio-group v-model="monthGroup">
+        <h4 class="pl-2 pb-2">Time interval:</h4>
         <v-radio
           v-for="m in month"
           :key="m"
@@ -20,8 +22,8 @@
           :value="m"
         ></v-radio>
       </v-radio-group>
-
       <v-radio-group v-model="typeGroup" class="pl-12">
+        <h4 class="pl-2 pb-2">Stock price type:</h4>
         <v-radio v-for="t in type" :key="t" :label="t" :value="t"></v-radio>
       </v-radio-group>
     </v-container>
@@ -66,6 +68,12 @@ export default {
       title: {
         text: "Stock Price Movement",
         align: "left",
+        style: {
+          fontSize: "16px",
+          fontWeight: "bold",
+          fontFamily: "Roboto, sans-serif",
+          color: "black",
+        },
       },
       fill: {
         type: "gradient",
@@ -100,7 +108,7 @@ export default {
           style: {
             colors: [],
             fontSize: "12px",
-            fontFamily: "Helvetica, Arial, sans-serif",
+            fontFamily: "Roboto, sans-serif",
             fontWeight: 400,
             cssClass: "apexcharts-xaxis-label",
           },
@@ -116,6 +124,9 @@ export default {
             hour: "HH:mm",
           },
         },
+      },
+      legend: {
+        position: "top",
       },
       tooltip: {
         shared: true,
