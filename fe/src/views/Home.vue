@@ -14,7 +14,7 @@
 
     <v-container fluid class="d-flex flex-row pa-4">
       <v-radio-group v-model="monthGroup">
-        <h4 class="pl-2 pb-2">Time interval:</h4>
+        <h4 class="ml-2 mb-2">Time interval:</h4>
         <v-radio
           v-for="m in month"
           :key="m"
@@ -22,10 +22,17 @@
           :value="m"
         ></v-radio>
       </v-radio-group>
-      <v-radio-group v-model="typeGroup" class="pl-12">
-        <h4 class="pl-2 pb-2">Stock price type:</h4>
+      <v-radio-group v-model="typeGroup" class="ml-12">
+        <h4 class="ml-2 mb-2">Stock price type:</h4>
         <v-radio v-for="t in type" :key="t" :label="t" :value="t"></v-radio>
       </v-radio-group>
+      <v-data-table
+        class="elevation-1 forecastTable"
+        :headers="headers"
+        :items="forecastItems"
+        :hide-default-footer="true"
+        :disable-pagination="true"
+      ></v-data-table>
     </v-container>
   </v-card>
 </template>
@@ -42,6 +49,26 @@ export default {
     monthGroup: 1,
     type: ["Open", "High", "Low", "Close"],
     typeGroup: "Close",
+    // Data table
+    headers: [
+      {
+        align: "start",
+        text: "Product",
+        value: "product",
+        width: "200px",
+      },
+      {
+        align: "start",
+        text: "Price forecast",
+        value: "forecast",
+        width: "200px",
+      },
+    ],
+    forecastItems: [
+      { product: "CORN", forecast: "100.00" },
+      { product: "NASD", forecast: "200.00" },
+      { product: "PPP", forecast: "300.00" },
+    ],
 
     // ApexChart
     series: [],
@@ -66,7 +93,7 @@ export default {
         size: 0,
       },
       title: {
-        text: "Stock Price Movement",
+        text: "Stock price movement",
         align: "left",
         style: {
           fontSize: "16px",
@@ -195,5 +222,13 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
+}
+.forecastTable {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
 }
 </style>
