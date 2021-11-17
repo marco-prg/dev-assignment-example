@@ -17,9 +17,11 @@ export default new VueI18n({
             appbar: {
                 home: "Home"
             },
-            header: {
-            },
             button: {
+                close: "Close"
+            },
+            notification: {
+                apiError: "API error"
             }
         }
     }

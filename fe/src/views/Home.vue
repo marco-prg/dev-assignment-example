@@ -174,7 +174,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["showLoadingScreen"]),
+    ...mapActions(["showLoadingScreen", "showNotification"]),
 
     async getDataFromApi() {
       this.showLoadingScreen(true);
@@ -198,6 +198,10 @@ export default {
         })
         .catch((e) => {
           console.error(e);
+          this.showNotification({
+            text: this.$t("notification.apiError"),
+            error: e,
+          });
         })
         .finally(() => this.showLoadingScreen(false));
     },
