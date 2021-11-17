@@ -1,17 +1,36 @@
 import sys
 sys.path.append('../lib')
 
-from flask import Flask, make_response, request, session
+from flask import Flask, make_response, request
 from flask_cors import CORS
+from utils import SUPPORTED_MONTHS, SUPPORTED_TYPES, init_log
 import traceback
 import yfinance as yf
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/', methods=['GET', 'POST'])
-def main_entry_point():
+logger = init_log()
+
+@app.route('/getdata', methods=['GET', 'POST'])
+def get_data():
   try:
+    request_args = request.args
+
+    months = request_args.get('months')
+    type = request_args.get('type')
+
+    logger.debug(f"months: {months}")
+    logger.debug(f"type: {type}")
+
+    if not all([months, type]):
+      return make_response({"error": "Missing required parameters"}, 400)
+
+    months_string = SUPPORTED_MONTHS.get(months)
+
+    if type not in SUPPORTED_TYPES or not months_string:
+      return make_response({"error": "Unsupported value(s) for argument(s)"}, 400)
+
 
     data_df = yf.download(
         # tickers list or string as well
@@ -20,7 +39,7 @@ def main_entry_point():
         # use "period" instead of start/end
         # valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max
         # (optional, default is '1mo')
-        period = "1y",
+        period = months_string,
 
         # fetch data by interval (including intraday if period < 60 days)
         # valid intervals: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo
@@ -49,7 +68,7 @@ def main_entry_point():
     )
 
     # remove unused columns
-    remove_columns = [column for column in data_df.columns if column[1] != 'Close']    
+    remove_columns = [column for column in data_df.columns if column[1] != type]    
     data_df = data_df.drop(remove_columns, axis=1)
 
     data_df.columns = ["_".join(column) for column in data_df.columns]

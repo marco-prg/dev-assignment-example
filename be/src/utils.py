@@ -2,6 +2,15 @@ import logging
 import os
 import socket
 
+SUPPORTED_MONTHS = {
+  '1' : '1mo',
+  '3' : '3mo',
+  '6' : '6mo',
+  '12' : '1y',
+}
+
+SUPPORTED_TYPES = ["Open", "High", "Low", "Close"]
+
 LOG_LEVELS = {
   'DEBUG' : 10,
   'INFO' : 20,  
