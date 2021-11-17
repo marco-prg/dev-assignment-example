@@ -67,13 +67,15 @@ def get_data():
         proxy = None
     )
 
-    # remove unused columns
+    # remove unused columns (according to specified type arg)
     remove_columns = [column for column in data_df.columns if column[1] != type]    
     data_df = data_df.drop(remove_columns, axis=1)
+
+    # rename and sort columns
     data_df.columns = [column[0] for column in data_df.columns]
+    data_df = data_df.reindex(sorted(data_df.columns), axis=1)
     
     return make_response(data_df.to_json(orient="split", date_format="iso"), 200)
-    #return data_df.to_html()
 
   except Exception:
     traceback.print_exc()

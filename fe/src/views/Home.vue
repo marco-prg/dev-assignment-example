@@ -35,16 +35,13 @@ import axios from "axios";
 export default {
   name: "Home",
   data: () => ({
-    // data from API
-    products: [],
-    data: [],
-    labels: [],
     // Configurable options
     month: [1, 3, 6, 12],
     monthGroup: 1,
     type: ["Open", "High", "Low", "Close"],
     typeGroup: "Close",
 
+    // ApexChart
     series: [],
     chartOptions: {
       chart: {
@@ -111,28 +108,23 @@ export default {
   methods: {
     ...mapActions(["showLoadingScreen"]),
 
-    getDataValues(index) {
-      return this.data.map((e) => e[index]);
-    },
-
     async getDataFromApi() {
       this.showLoadingScreen(true);
       axios
         .get(`getdata?months=${this.monthGroup}&type=${this.typeGroup}`)
         .then((response) => {
           // JSON responses are automatically parsed.
-          console.log(response.data);
           let jsonResponse = response.data;
 
-          this.products = jsonResponse.columns;
-          this.data = jsonResponse.data;
-          this.labels = jsonResponse.index;
+          let products = jsonResponse.columns;
+          let data = jsonResponse.data;
+          //let labels = jsonResponse.index;
 
           this.series = [];
-          for (const [index, product] of this.products.entries()) {
+          for (const [index, product] of products.entries()) {
             this.series.push({
               name: product,
-              data: this.getDataValues(index)
+              data: data.map(e => e[index])
             })
           }
         })
