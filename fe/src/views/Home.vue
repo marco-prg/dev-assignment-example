@@ -1,17 +1,14 @@
 <template>
   <v-card>
     <v-sheet class="stackSheet" color="white">
-      <v-sparkline
-        v-for="s in products.length"
-        style="height: 300px"
-        :key="s"
-        :class="s == 1 ? 'stackSpark' : null"
-        :value="getDataValues(s)"
-        color="blue"
-        line-width="1"
-        padding="10"
-        :labels="s == 1 ? labels : ''"
-      ></v-sparkline>
+      <div id="chart">
+        <apexchart
+          type="area"
+          height="350"
+          :options="chartOptions"
+          :series="series"
+        ></apexchart>
+      </div>
     </v-sheet>
 
     <v-container fluid class="d-flex flex-row">
@@ -47,6 +44,64 @@ export default {
     monthGroup: 1,
     type: ["Open", "High", "Low", "Close"],
     typeGroup: "Close",
+
+    series: [],
+    chartOptions: {
+      chart: {
+        type: "area",
+        stacked: true,
+        height: 350,
+        zoom: {
+          type: "x",
+          enabled: true,
+          autoScaleYaxis: true,
+        },
+        toolbar: {
+          autoSelected: "zoom",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      markers: {
+        size: 0,
+      },
+      title: {
+        text: "Stock Price Movement",
+        align: "left",
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          shadeIntensity: 1,
+          inverseColors: false,
+          opacityFrom: 0.5,
+          opacityTo: 0,
+          stops: [0, 90, 100],
+        },
+      },
+      yaxis: {
+        labels: {
+          formatter: function (val) {
+            return val.toFixed(2);
+          },
+        },
+        title: {
+          text: "Price",
+        },
+      },
+      xaxis: {
+        //type: "datetime",
+      },
+      tooltip: {
+        shared: true,
+        y: {
+          formatter: function (val) {
+            return val.toFixed(2);
+          },
+        },
+      },
+    },
   }),
 
   async created() {
@@ -57,7 +112,7 @@ export default {
     ...mapActions(["showLoadingScreen"]),
 
     getDataValues(index) {
-      return this.data.map((e) => e[index - 1]);
+      return this.data.map((e) => e[index]);
     },
 
     async getDataFromApi() {
@@ -72,6 +127,14 @@ export default {
           this.products = jsonResponse.columns;
           this.data = jsonResponse.data;
           this.labels = jsonResponse.index;
+
+          this.series = [];
+          for (const [index, product] of this.products.entries()) {
+            this.series.push({
+              name: product,
+              data: this.getDataValues(index)
+            })
+          }
         })
         .catch((e) => {
           console.error(e);

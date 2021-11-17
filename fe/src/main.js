@@ -5,6 +5,7 @@ import store from './store'
 import i18n from './i18n'
 import vuetify from './plugins/vuetify';
 import axios from 'axios';
+import '@/plugins/apexcharts';
 
 axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 Vue.config.productionTip = false
