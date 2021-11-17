@@ -1,6 +1,6 @@
 const app = {
   state: () => ({
-    isLoading: true,
+    isLoading: false,
   }),
   mutations: {
     isLoading: (state, isLoading) => {

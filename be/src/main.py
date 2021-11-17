@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../lib')
+sys.path.append('../lib')       # I usually use venvs instead of target lib folder
 
 from flask import Flask, make_response, request
 from flask_cors import CORS
@@ -12,7 +12,7 @@ CORS(app)
 
 logger = init_log()
 
-@app.route('/getdata', methods=['GET', 'POST'])
+@app.route('/getdata', methods=['GET'])
 def get_data():
   try:
     request_args = request.args
@@ -70,10 +70,10 @@ def get_data():
     # remove unused columns
     remove_columns = [column for column in data_df.columns if column[1] != type]    
     data_df = data_df.drop(remove_columns, axis=1)
-
-    data_df.columns = ["_".join(column) for column in data_df.columns]
-    # return make_response({"data": data_df.to_json()}, 200)
-    return data_df.to_html()
+    data_df.columns = [column[0] for column in data_df.columns]
+    
+    return make_response(data_df.to_json(orient="split", date_format="iso"), 200)
+    #return data_df.to_html()
 
   except Exception:
     traceback.print_exc()

@@ -2,25 +2,15 @@
   <v-card>
     <v-sheet class="stackSheet" color="white">
       <v-sparkline
-        :value="value1"
+        v-for="s in products.length"
+        style="height: 300px"
+        :key="s"
+        :class="s == 1 ? 'stackSpark' : null"
+        :value="getDataValues(s)"
         color="blue"
         line-width="1"
         padding="10"
-        show-labels="true"
-      ></v-sparkline>
-      <v-sparkline
-        class="stackSpark"
-        :value="value2"
-        color="red"
-        line-width="1"
-        padding="10"
-      ></v-sparkline>
-      <v-sparkline
-        class="stackSpark"
-        :value="value3"
-        color="green"
-        line-width="1"
-        padding="10"
+        :labels="s == 1 ? labels : ''"
       ></v-sparkline>
     </v-sheet>
 
@@ -35,46 +25,70 @@
       </v-radio-group>
 
       <v-radio-group v-model="typeGroup" class="pl-12">
-        <v-radio
-          v-for="t in type"
-          :key="t"
-          :label="t"
-          :value="t"
-        ></v-radio>
+        <v-radio v-for="t in type" :key="t" :label="t" :value="t"></v-radio>
       </v-radio-group>
     </v-container>
   </v-card>
 </template>
 
 <script>
-import { get } from "../store/helpers.js";
+import { mapActions } from "vuex";
+import axios from "axios";
 
 export default {
   name: "Home",
   data: () => ({
-    value1: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
-    value2: [7, 4, 7, 2, 9, 0, 1, 2, 4, 7, 7, 10, 1, 3, 5],
-    value3: [17, 4, 7, 2, 5, 4, 3, 2, 5, 2, 1, 10, 1, 3, 5],
+    // data from API
+    products: [],
+    data: [],
+    labels: [],
+    // Configurable options
     month: [1, 3, 6, 12],
     monthGroup: 1,
     type: ["Open", "High", "Low", "Close"],
-    typeGroup: "Close"
+    typeGroup: "Close",
   }),
 
+  async created() {
+    await this.getDataFromApi();
+  },
+
   methods: {
-    async getDataFromApi() {
-      this.loading = true;
+    ...mapActions(["showLoadingScreen"]),
 
-      let query = "getdata";
-
-      const res = await get(query);
-      const json = await res.json();
-
-      this.items = json.result;
-
-      this.loading = false;
+    getDataValues(index) {
+      return this.data.map((e) => e[index - 1]);
     },
-  }
+
+    async getDataFromApi() {
+      this.showLoadingScreen(true);
+      axios
+        .get(`getdata?months=${this.monthGroup}&type=${this.typeGroup}`)
+        .then((response) => {
+          // JSON responses are automatically parsed.
+          console.log(response.data);
+          let jsonResponse = response.data;
+
+          this.products = jsonResponse.columns;
+          this.data = jsonResponse.data;
+          this.labels = jsonResponse.index;
+        })
+        .catch((e) => {
+          console.error(e);
+        })
+        .finally(() => this.showLoadingScreen(false));
+    },
+  },
+
+  watch: {
+    monthGroup: async function () {
+      await this.getDataFromApi();
+    },
+
+    typeGroup: async function () {
+      await this.getDataFromApi();
+    },
+  },
 };
 </script>
 <style scoped>
