@@ -1,0 +1,26 @@
+FROM ubuntu:18.04
+
+# Set non-interactive
+ENV DEBIAN_FRONTEND noninteractive
+
+# Update apt cache
+RUN apt-get update
+
+# Curl
+RUN apt-get install curl -y
+
+# Install get-pip script
+RUN curl -O https://bootstrap.pypa.io/get-pip.py
+
+# Install Python3 and Pip3, force pip to 20.2 to improve reproducibility
+RUN apt-get install python3 python3-distutils -y 
+RUN python3 get-pip.py && pip install -I pip==20.2
+
+# Install dev & build packages
+RUN apt-get install python3-dev build-essential -y
+
+# Install deps now to avoid misleading error messages which are actually non-errors at the next step
+RUN pip3 install convertdate==2.1.2 lunarcalendar==0.0.9 holidays==0.10.3 cython==0.29.21 pystan==2.19.1.1 pandas==0.23.4 
+
+# Install/build Prophet
+RUN pip3 install fbprophet==0.6

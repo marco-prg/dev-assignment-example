@@ -59,7 +59,7 @@ export default {
       },
       {
         align: "start",
-        text: "Price forecast",
+        text: "Price forecast (tomorrow)",
         value: "forecast",
         width: "200px",
       },

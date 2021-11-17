@@ -1,5 +1,8 @@
 flask==1.1.2
 flask-cors==3.0.10
+testresources==2.0.1
+google-auth<2.0
 yfinance==0.1.66
+statsmodels==0.13.1
 #requests==2.25.1
 #psycopg2==2.8.6
