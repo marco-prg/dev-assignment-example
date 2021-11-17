@@ -75,7 +75,7 @@ def get_data():
     data_df.columns = [column[0] for column in data_df.columns]
     data_df = data_df.reindex(sorted(data_df.columns), axis=1)
     
-    return make_response(data_df.to_json(orient="split", date_format="iso"), 200)
+    return make_response(data_df.to_json(orient="split"), 200)
 
   except Exception:
     traceback.print_exc()

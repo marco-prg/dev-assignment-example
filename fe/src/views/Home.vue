@@ -88,10 +88,40 @@ export default {
         },
       },
       xaxis: {
-        //type: "datetime",
+        type: "datetime",
+        labels: {
+          show: true,
+          rotate: -45,
+          rotateAlways: false,
+          hideOverlappingLabels: true,
+          showDuplicates: false,
+          trim: false,
+          maxHeight: 60,
+          style: {
+            colors: [],
+            fontSize: "12px",
+            fontFamily: "Helvetica, Arial, sans-serif",
+            fontWeight: 400,
+            cssClass: "apexcharts-xaxis-label",
+          },
+          offsetX: 0,
+          offsetY: 0,
+          //format: undefined,
+          //formatter: undefined,
+          datetimeUTC: true,
+          datetimeFormatter: {
+            year: "yyyy",
+            month: "MMM 'yy",
+            day: "dd MMM",
+            hour: "HH:mm",
+          },
+        },
       },
       tooltip: {
         shared: true,
+        x: {
+          format: "dd MMM yyyy",
+        },
         y: {
           formatter: function (val) {
             return val.toFixed(2);
@@ -113,19 +143,19 @@ export default {
       axios
         .get(`getdata?months=${this.monthGroup}&type=${this.typeGroup}`)
         .then((response) => {
-          // JSON responses are automatically parsed.
+          // JSON responses are automatically parsed
           let jsonResponse = response.data;
 
           let products = jsonResponse.columns;
           let data = jsonResponse.data;
-          //let labels = jsonResponse.index;
+          let labels = jsonResponse.index;
 
           this.series = [];
           for (const [index, product] of products.entries()) {
             this.series.push({
               name: product,
-              data: data.map(e => e[index])
-            })
+              data: data.map((e, i) => [labels[i], e[index]]),
+            });
           }
         })
         .catch((e) => {
