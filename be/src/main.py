@@ -33,9 +33,16 @@ def get_data():
       return make_response({"error": "Unsupported value(s) for argument(s)"}, 400)
 
     data_df = data.get_data(months_string, type)    
-    forecast_series = data.get_multiple_prediction(data_df, steps)
+    forecast_df = data.get_multiple_prediction(data_df, steps)
+
+    logger.debug(forecast_df)
     
-    return make_response(data_df.to_json(orient="split"), 200)
+    return make_response(
+      {
+        "history": data_df.to_json(orient="split"),
+        "forecast": forecast_df.to_json(orient="split")
+      },
+      200)
 
   except Exception:
     traceback.print_exc()

@@ -1,5 +1,6 @@
 from statsmodels.tsa.arima.model import ARIMA
 import yfinance as yf
+import pandas as pd
 import utils
 
 logger = utils.init_log()
@@ -76,9 +77,10 @@ def get_prediction(df, steps):
 
 
 def get_multiple_prediction(data_df, steps):
-  for col in data_df.columns:
-    forecast = get_prediction(data_df[col], steps)
-    logger.debug(f"Product: {col} - Forecast:")
-    logger.debug(forecast)
+  frames = []
 
-  return data_df
+  for col in data_df.columns:
+    forecast_series = get_prediction(data_df[col], steps)
+    frames.append(forecast_series.to_frame(name=col))
+
+  return pd.concat(frames, axis=1)

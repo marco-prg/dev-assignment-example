@@ -64,11 +64,7 @@ export default {
         width: "200px",
       },
     ],
-    forecastItems: [
-      { product: "CORN", forecast: "100.00" },
-      { product: "NASD", forecast: "200.00" },
-      { product: "PPP", forecast: "300.00" },
-    ],
+    forecastItems: [],
 
     // ApexChart
     series: [],
@@ -181,20 +177,28 @@ export default {
       axios
         .get(`getdata?months=${this.monthGroup}&type=${this.typeGroup}`)
         .then((response) => {
-          // JSON responses are automatically parsed
-          let jsonResponse = response.data;
+          let responseData = response.data;
 
-          let products = jsonResponse.columns;
-          let data = jsonResponse.data;
-          let labels = jsonResponse.index;
+          let history = JSON.parse(responseData.history);
 
           this.series = [];
-          for (const [index, product] of products.entries()) {
+          for (const [index, product] of history.columns.entries()) {
             this.series.push({
               name: product,
-              data: data.map((e, i) => [labels[i], e[index]]),
+              data: history.data.map((e, i) => [history.index[i], e[index]]),
             });
           }
+
+          let forecast = JSON.parse(responseData.forecast);
+          
+          this.forecastItems = [];
+          for (const [index, product] of forecast.columns.entries()) {
+            this.forecastItems.push({
+              product: product,
+              forecast: forecast.data.map(e => e[index].toFixed(2)),
+            });
+          }
+
         })
         .catch((e) => {
           console.error(e);
