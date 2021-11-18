@@ -71,7 +71,7 @@ export default {
     chartOptions: {
       chart: {
         type: "area",
-        stacked: true,
+        stacked: false,
         height: 350,
         zoom: {
           type: "x",

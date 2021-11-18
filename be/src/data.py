@@ -54,7 +54,7 @@ def get_data(months, type):
 
 def get_prediction(df, steps):
   # Model generation and fit
-  model = ARIMA(df, order=(1,1,1))            # naive manual parameters estimation based on used time-series data
+  model = ARIMA(df, order=(1,1,1))            # naive manual parameters estimation based on currently used time-series data
   fit_model = model.fit()
   logger.debug(fit_model.summary())
 
@@ -62,13 +62,13 @@ def get_prediction(df, steps):
   forecast= fit_model.get_prediction(start=steps) if steps < 0 else fit_model.get_forecast(steps=steps)
 
   # Forecast mean
-  mean_forecast = forecast.predicted_mean     # Predicted mean is a pandas series
+  mean_forecast = forecast.predicted_mean
   logger.debug("Predicted mean:")
   logger.debug(mean_forecast)
   logger.debug("\n\n")
 
   # Get confidence intervals of forecasts
-  confidence_intervals = forecast.conf_int()  # Condence interval method returns pandas DataFrame
+  confidence_intervals = forecast.conf_int()
   logger.debug("Confidence intervals:")
   logger.debug(confidence_intervals)
   logger.debug("\n\n")
