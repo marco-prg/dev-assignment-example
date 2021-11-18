@@ -19,7 +19,7 @@ LOG_LEVELS = {
   'CRITICAL' : 50
 }
 
-log_level =  LOG_LEVELS.get(os.environ.get('LOG_LEVEL','INFO'))
+log_level =  LOG_LEVELS.get(os.environ.get('LOG_LEVEL','DEBUG'))
 logger = None
 
 
@@ -34,6 +34,7 @@ class HostnameFilter(logging.Filter):
 def init_log():
   global logger
 
+  # complete debugger info - useful for hypothetical test and prod envs
   if not logger:
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(log_level)
