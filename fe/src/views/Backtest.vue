@@ -26,8 +26,9 @@
         <h4 class="ml-2 mb-2">Stock price type:</h4>
         <v-radio v-for="t in type" :key="t" :label="t" :value="t"></v-radio>
       </v-radio-group>
+      <v-spacer></v-spacer>
       <v-data-table
-        class="elevation-1 forecastTable"
+        class="elevation-1 forecastTable mr-3"
         :headers="headers"
         :items="forecastItems"
         :hide-default-footer="true"
@@ -50,20 +51,7 @@ export default {
     type: ["Open", "High", "Low", "Close"],
     typeGroup: "Close",
     // Data table
-    headers: [
-      {
-        align: "start",
-        text: "Product",
-        value: "product",
-        width: "200px",
-      },
-      {
-        align: "start",
-        text: "Price forecast (tomorrow)",
-        value: "forecast",
-        width: "200px",
-      },
-    ],
+    headers: [],
     forecastItems: [],
 
     // ApexChart
@@ -179,7 +167,7 @@ export default {
         .then((response) => {
           let responseData = response.data;
 
-          let history = JSON.parse(responseData.history);
+          let history = JSON.parse(responseData.data);
 
           this.series = [];
           for (const [index, product] of history.columns.entries()) {
@@ -189,16 +177,31 @@ export default {
             });
           }
 
-          let forecast = JSON.parse(responseData.forecast);
-          
-          this.forecastItems = [];
-          for (const [index, product] of forecast.columns.entries()) {
+          let forecast = JSON.parse(responseData.diff);
+
+          this.headers = [{
+              align: "start",
+              text: "Product",
+              value: "product",
+              width: "200px",
+          }];
+
+          history.index.forEach((date) => {
+            this.headers.push({
+              align: "start",
+              text: new Intl.DateTimeFormat("it-IT").format(new Date(date)),
+              value: `${date}`,
+              width: "200px",
+            });
+          });
+
+          this.forecastItems = [];          
+          for (const [product, value] of Object.entries(forecast)) {
             this.forecastItems.push({
-              product: product,
-              forecast: forecast.data.map(e => e[index].toFixed(2)),
+              product,
+              ...value
             });
           }
-
         })
         .catch((e) => {
           console.error(e);
@@ -232,11 +235,6 @@ export default {
   left: 0;
 }
 .forecastTable {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 400px;
+  width: 1200px;
 }
 </style>

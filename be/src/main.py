@@ -74,13 +74,16 @@ def get_backtest_data():
 
     logger.debug(forecast_df)
 
+    diff_df = data_df.subtract(forecast_df)
     forecast_df.columns = [f"{column}_forecast" for column in data_df.columns]
     data_df = pd.concat([data_df, forecast_df], axis=1)
+
+    logger.debug(diff_df)
     
     return make_response(
       {
-        "history": data_df.to_json(orient="split"),
-        "forecast": forecast_df.to_json(orient="split")
+        "data": data_df.to_json(orient="split"),
+        "diff": diff_df.to_json(orient="columns")
       },
       200)
 
