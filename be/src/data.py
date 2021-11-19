@@ -56,22 +56,22 @@ def get_prediction(df, steps):
   # Model generation and fit
   model = ARIMA(df, order=(1,1,1))            # naive manual parameters estimation based on currently used time-series data
   fit_model = model.fit()
-  logger.debug(fit_model.summary())
+  logger.info(fit_model.summary())
 
   # Backtest based on last n samples of seen data if n < 0 else forecasting out of sample
-  forecast= fit_model.get_prediction(start=steps) if steps < 0 else fit_model.get_forecast(steps=steps)
+  forecast = fit_model.get_prediction(start=steps) if steps < 0 else fit_model.get_forecast(steps=steps)
 
   # Forecast mean
   mean_forecast = forecast.predicted_mean
-  logger.debug("Predicted mean:")
-  logger.debug(mean_forecast)
-  logger.debug("\n\n")
+  logger.info("Predicted mean:")
+  logger.info(mean_forecast)
+  logger.info("\n\n")
 
   # Get confidence intervals of forecasts
   confidence_intervals = forecast.conf_int()
-  logger.debug("Confidence intervals:")
-  logger.debug(confidence_intervals)
-  logger.debug("\n\n")
+  logger.info("Confidence intervals:")
+  logger.info(confidence_intervals)
+  logger.info("\n\n")
 
   return mean_forecast
 

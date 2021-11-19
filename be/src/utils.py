@@ -19,7 +19,7 @@ LOG_LEVELS = {
   'CRITICAL' : 50
 }
 
-log_level =  LOG_LEVELS.get(os.environ.get('LOG_LEVEL','DEBUG'))
+log_level =  LOG_LEVELS.get(os.environ.get('LOG_LEVEL','INFO'))
 logger = None
 
 
