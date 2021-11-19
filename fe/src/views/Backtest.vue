@@ -42,7 +42,7 @@ import { mapActions } from "vuex";
 import axios from "axios";
 
 export default {
-  name: "Home",
+  name: "Backtest",
   data: () => ({
     // Configurable options
     month: [1, 3, 6, 12],
@@ -175,7 +175,7 @@ export default {
     async getDataFromApi() {
       this.showLoadingScreen(true);
       axios
-        .get(`data?months=${this.monthGroup}&type=${this.typeGroup}`)
+        .get(`backtest?months=${this.monthGroup}&type=${this.typeGroup}`)
         .then((response) => {
           let responseData = response.data;
 

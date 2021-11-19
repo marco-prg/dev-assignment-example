@@ -15,7 +15,8 @@ export default new VueI18n({
     messages: {
         en: {
             appbar: {
-                home: "Home"
+                home: "Home",
+                backtest: "Backtest"
             },
             button: {
                 close: "Close"
