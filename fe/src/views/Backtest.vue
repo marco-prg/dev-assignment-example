@@ -33,7 +33,17 @@
         :items="forecastItems"
         :hide-default-footer="true"
         :disable-pagination="true"
-      ></v-data-table>
+        >
+        <template v-slot:item="{ item }">
+          <tr>
+            <td v-for="(v, c) in item" :key="c">
+              <span :style="c == 'product' ? '' : v < 0 ? 'color: red' : 'color: green'" dark>
+                {{ v }}
+              </span>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
     </v-container>
   </v-card>
 </template>
@@ -179,27 +189,29 @@ export default {
 
           let forecast = JSON.parse(responseData.diff);
 
-          this.headers = [{
+          this.headers = [
+            {
               align: "start",
               text: "Product",
               value: "product",
-              width: "100px",
-          }];
+              width: "150px",
+            },
+          ];
 
           history.index.forEach((date) => {
             this.headers.push({
               align: "start",
               text: new Intl.DateTimeFormat("it-IT").format(new Date(date)),
               value: `${date}`,
-              width: "100px",
+              width: "150px",
             });
           });
 
-          this.forecastItems = [];          
+          this.forecastItems = [];
           for (const [product, value] of Object.entries(forecast)) {
             this.forecastItems.push({
               product,
-              ...value
+              ...value,
             });
           }
         })
