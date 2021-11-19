@@ -74,7 +74,7 @@ def get_backtest_data():
 
     logger.debug(forecast_df)
 
-    diff_df = data_df.subtract(forecast_df)
+    diff_df = data_df.subtract(forecast_df).round(2)
     forecast_df.columns = [f"{column}_forecast" for column in data_df.columns]
     data_df = pd.concat([data_df, forecast_df], axis=1)
 

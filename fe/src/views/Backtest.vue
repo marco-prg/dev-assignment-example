@@ -183,7 +183,7 @@ export default {
               align: "start",
               text: "Product",
               value: "product",
-              width: "200px",
+              width: "100px",
           }];
 
           history.index.forEach((date) => {
@@ -191,7 +191,7 @@ export default {
               align: "start",
               text: new Intl.DateTimeFormat("it-IT").format(new Date(date)),
               value: `${date}`,
-              width: "200px",
+              width: "100px",
             });
           });
 
