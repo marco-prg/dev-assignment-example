@@ -21,6 +21,8 @@ COPY ./src /app/src
 
 WORKDIR /app/src
 
+EXPOSE 5000
+
 ENTRYPOINT [ "python3" ]
 
 CMD [ "main.py" ]
