@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  dev-assignment-be:
+    image: "dev-assignment-be:latest"
+    ports:
+      - "5000:5000"
+  dev-assignment-fe:
+    image: "dev-assignment-fe:latest"
+    ports:
+      - "8080:8080"
