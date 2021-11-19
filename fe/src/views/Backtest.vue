@@ -135,8 +135,6 @@ export default {
           },
           offsetX: 0,
           offsetY: 0,
-          //format: undefined,
-          //formatter: undefined,
           datetimeUTC: true,
           datetimeFormatter: {
             year: "yyyy",
@@ -238,14 +236,6 @@ export default {
 };
 </script>
 <style scoped>
-.stackSheet {
-  position: relative;
-}
-.stackSpark {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 .forecastTable {
   width: 1200px;
 }
