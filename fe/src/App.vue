@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <AppBar />
+    <app-bar />
     <v-main>
       <v-overlay :value="isLoading">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
@@ -9,47 +9,18 @@
         <router-view />
       </v-container>
     </v-main>
-    <v-snackbar
-      :value="notificationState.text"
-      :multi-line="true"
-      :timeout="-1"
-      :top="true"
-      :right="true"
-      :color="notificationState.error ? 'red' : 'blue'"
-    >
-      {{ notificationState.text }}
-      <small v-if="notificationState.error">
-        <br />
-        {{
-          this.$te(`notification.error.${notificationState.error}`)
-            ? this.$t(`notification.error.${notificationState.error}`)
-            : notificationState.error
-        }}
-      </small>
-      <template v-slot:action="{ attrs }">
-        <v-btn color="white" text v-bind="attrs" @click="hideNotification">
-          {{ $t("button.close") }}
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <notification />
   </v-app>
 </template>
 
 <script>
-import AppBar from "./components/AppBar.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
-  components: {
-    AppBar,
-  },
-
-  methods: {
-    ...mapActions(["hideNotification"]),
-  },
+  name: "App",
 
   computed: {
-    ...mapGetters(["isLoading", "notificationState"]),
+    ...mapGetters(["isLoading"]),
   },
 };
 </script>

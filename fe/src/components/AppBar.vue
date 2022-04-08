@@ -27,9 +27,6 @@ import { routes } from "../router";
 export default {
   name: "AppBar",
 
-  data: () => ({
-  }),
-
   computed: {    
     mainRoutes: function() {
       return routes
@@ -40,8 +37,6 @@ export default {
       return this.$route.meta.number;
     }
   },
-  methods: {
-  }
 }
 </script>
 
